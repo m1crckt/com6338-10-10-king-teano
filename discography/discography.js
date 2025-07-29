@@ -60,35 +60,102 @@ async function fetchMusicInfo(decade) {
 // Display music cards
 function displayMusicCards(tracks) {
     // Clear #music-section card container
+    const musicContainer = document.getElementById("music-cards");
+    musicContainer.innerHTML = "";
     // Loop through tracks - create card elements dynamically
-    // Create car element (div.card)
-    // Add album art (img)
-    // Add track title and artist name
-    // Append card to container
-    // Add click event to card -> save track ID and navigate to details.html
+    tracks.forEach(track => {
+        // Create card element (div.card)   
+        const card = document.createElement("div");
+        card.classList.add("card");
+        // Add album art (img)
+        const img = document.createElement("img");
+        img.src = track.album?.image || "https://dummyimage.com/150x150/000/fff&text=Album+Cover";
+        img.alt = `${track.name} album cover`;
+        // Add track title and artist name
+        const title = document.createElement("h3");
+        title.textContent = track.name;
+
+        const artist = document.createElement("p");
+        artist.textContent = track.artist?.name || "Unknown Artist";
+
+        // Append card to container
+        card.appendChild(img);
+        card.appendChild(title);
+        card.appendChild(artist);
+
+        // Add click event to card -> save track ID and navigate to details.html
+        card.addEventListener("click", () => {
+            navigateDetailsPage("track",track.id);
+        })
+
+        musicContainer.appendChild(card);
+    })
+
 }
 
 // Fetch movie informtion from TMCb
-function fetchMovieInfo(decade) {
+async function fetchMovieInfo(decade) {
+    // List of decades
+    const decadeMap = {
+        "1970s": { start: 1970, end: 1979 },
+        "1980s": { start: 1980, end: 1989 },
+        "1990s": { start: 1990, end: 1999 },
+        "2000s": { start: 2000, end: 2009 },
+        "2010s": { start: 2010, end: 2019 },
+    }
     // Build API IRL for TMDb (filter by release date decade)
+    const { start, end } = decadeMap[decade];
+    const url = `https://api.themoviedb.org/3/discover/movie?api_key=b4e8f9af29bda2f259d3fa26214f2ace&primary_release_date.gte=${start}-01-01&primary_release_date.lte=${end}-12-31&sort_by=popularity.desc`;
     // Make GET request to TMDb API
-    // Parse response JSON
+     // Parse response JSON
     // Limit results to 8-10 movies
+    try {
+        const response = await fetchMovieInfo(url);
+        const data = await response.json();
+        displayMovieCards(data.results.slice(0, 10));
+    } catch (error) {
+        console.error("Error fetching movies:", error);
+        showError("Unable to load movie data");
+    }
+
 }
-
-
 
 // Display movie cards
 function displayMovieCards(movies) {
     // Clear #movie-section card container
+    const movieContainer = document.getElementById("movie-cards");
+    movieContainer.innerHTML = "";
     // Loop through movies
-    // Create card element (div.card)
-    // Add poster
-    // Add movie title and release year
-    // Append card to container
-    // Add click event to card -> save movie ID & navigate to details.html
+    movies.forEach(movie => {
+        // Create card element (div.card)
+        const card = document.createElement("div");
+        card.classList.add("card");
+        // Add poster
+        const img = document.createElement("h3");
+        img.src = movie.poster_path
+            ? `https://image.tmdb.org/t/p/w200${movie.poster_path}`
+            : "https://dummyimage.com/150x225/000/fff&text=No+Poster";
+        img.alt = `${movie.title} poster`;
+        // Add movie title and release year
+        const title = document.createElement("p");
+        title.textContent = movie.title;
+
+        const year = document.createElement("p");
+        year.textContent = movie.release_date
+            ? movie.release_date.split("_") [0]
+            : "Unknown Year";
+        // Append card to container
+        card.appendChild(img);
+        card.appendChild(title);
+        card.appendChild(year);
+        // Add click event to card -> save movie ID & navigate to details.html
+        card.addEventListener("click", () => {
+            navigateDetailsPage("movie", movie.id);
+        })
+        movieContainer.appendChild(card);
+    })
 }
-// Navigate to detailes page
+// Navigate to details page
 function navigateDetailsPage(type, id) {
 // On card click: save selected ID (music or movie) in localStorage
 // Redirect to details.html
