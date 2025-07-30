@@ -4,11 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Check if a decade was selected on the home page (saved in localStorage
     let decade = localStorage.getItem("decadeInput")?.trim();
         // TEMP CODE
-    if (!decade) {
+    /*if (!decade) {
         console.error("No decade found in localStorage. Redirecting to homepage...");
         window.location.href = "index.html";
         return;
-        }
+        }*/
     // Display decade in <h1>
     const decadeHeading = document.getElementById("decade-name");
     decadeHeading.textContent = `${decade} Highlights`;
@@ -121,7 +121,8 @@ async function fetchMovieInfo(decade) {
 
     // Build API IRL for TMDb (filter by release date decade)
     const { start, end } = decadeMap[decade];
-    const url = `https://api.themoviedb.org/3/discover/movie?api_key=b4e8f9af29bda2f259d3fa26214f2ace&primary_release_date.gte=${start}-01-01&primary_release_date.lte=${end}-12-31&sort_by=popularity.desc`;
+    const url = `https://api.themoviedb.org/3/discover/movie?api_key=b4e8f9af29bda2f259d3fa26214f2ace
+&primary_release_date.gte=${start}-01-01&primary_release_date.lte=${end}-12-31&sort_by=popularity.desc&include_adult=false`;
     // Make GET request to TMDb API
      // Parse response JSON
     // Limit results to 8-10 movies
