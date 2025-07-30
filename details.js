@@ -2,6 +2,7 @@ const detailsContainer = document.getElementById('details-container')
 const detailHeader = document.getElementById('detail-header')
 
 const TMDB_API_KEY = 'afe16acc7371ea20cf842174d3cd101e'
+const LASTFM_API_KEY = 'b23e73024e246d9ed7226ddc54740e41'
 
 // Get selected item info
 const itemType = localStorage.getItem('selectedItemType')
@@ -18,32 +19,54 @@ if (!itemType || !itemId) {
 }
 
 // SONG DETAILS
-async function fetchSongDetails(trackId) {
+async function fetchSongDetails(id) {
   detailHeader.textContent = 'Song Details'
 
-  const url = `https://itunes.apple.com/lookup?id=${trackId}`
-
   try {
+    let url
+    let artist = ''
+    let track = ''
+    if (id.includes(' - ')) {
+      [artist, track] = id.split(' - ')
+      url = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=${LASTFM_API_KEY}&artist=${encodeURIComponent(artist)}&track=${encodeURIComponent(track)}&format=json`
+    } else {
+      url = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=${LASTFM_API_KEY}&mbid=${id}&format=json`
+    }
+
     const res = await fetch(url)
     const data = await res.json()
-    if (data.resultCount === 0) {
+
+    if (!data.track) {
       detailsContainer.innerHTML = '<p>Song not found.</p>'
       return
     }
-    const song = data.results[0]
-    const artwork = song.artworkUrl100.replace('100x100', '600x600')
+
+    const trackInfo = data.track
+
+    const album = trackInfo.album?.title || 'N/A'
+    const cover = trackInfo.album?.image?.find(img => img.size === 'extralarge')?.['#text'] || ''
+    const artistName = trackInfo.artist?.name || 'N/A'
+    const trackName = trackInfo.name || 'N/A'
+    const genres = trackInfo.toptags?.tag?.map(t => t.name) || ['N/A']
+
+    let releaseDate = 'N/A'
+    if (trackInfo.wiki?.published) {
+      const d = new Date(trackInfo.wiki.published)
+      releaseDate = d.toLocaleDateString()
+    }
+
+    const trackNumber = 'N/A'
 
     detailsContainer.innerHTML = `
-      <div style="display: flex; gap: 1rem; align-items: flex-start;">
-        <img src="${artwork}" alt="Album Art" style="width: 200px; border-radius: 8px;">
+      <div class="song-detail-layout" style="display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap;">
+        ${cover ? `<img src="${cover}" alt="${trackName} Cover" style="width: 250px; border-radius: 8px;">` : ''}
         <div>
-          <h3>${song.trackName}</h3>
-          <p><strong>Artist:</strong> ${song.artistName}</p>
-          <p><strong>Album:</strong> ${song.collectionName}</p>
-          <p><strong>Release Date:</strong> ${new Date(song.releaseDate).toLocaleDateString()}</p>
-          <p><strong>Track Number:</strong> ${song.trackNumber || 'N/A'}</p>
-          <p><strong>Genre:</strong> ${song.primaryGenreName}</p>
-          <audio controls src="${song.previewUrl}"></audio>
+          <h3>${trackName}</h3>
+          <p><strong>Artist:</strong> ${artistName}</p>
+          <p><strong>Album:</strong> ${album}</p>
+          <p><strong>Release Date:</strong> ${releaseDate}</p>
+          <p><strong>Track Number:</strong> ${trackNumber}</p>
+          <p><strong>Genre:</strong> ${genres.join(', ')}</p>
         </div>
       </div>
     `

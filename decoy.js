@@ -9,6 +9,7 @@ const musicList = document.getElementById('music-list')
 const filmList = document.getElementById('film-list')
 
 const TMDB_API_KEY = 'afe16acc7371ea20cf842174d3cd101e' // Your TMDb API key
+const LASTFM_API_KEY = 'b23e73024e246d9ed7226ddc54740e41' // Replace with your Last.fm API key
 
 // --- Fetch Top Films from TMDB (exclude NC-17 and adult, include R and below) ---
 async function fetchTopFilms(decade) {
@@ -50,68 +51,62 @@ async function fetchTopFilms(decade) {
   }
 }
 
-// --- Fetch Top Songs for full decade from iTunes ---
-async function fetchSongsFromDecade(decade) {
-  const yearStart = decade.startsWith('00') ? 2000 : parseInt(decade)
-  const limitPerYear = 5 // number of songs per year to fetch
-  const combinedSongs = new Map() // Use Map to avoid duplicates by trackId
-
-  musicList.innerHTML = 'Loading songs...'
-
-  // Fetch songs for each year in parallel
-  const fetchPromises = []
-  for (let year = yearStart; year <= yearStart + 9; year++) {
-    const url = `https://itunes.apple.com/search?term=pop&entity=song&limit=${limitPerYear}` +
-      `&attribute=releaseYearTerm&releaseYear=${year}`
-    fetchPromises.push(
-      fetch(url)
-        .then(res => res.json())
-        .then(data => {
-          data.results.forEach(song => {
-            if (!combinedSongs.has(song.trackId)) {
-              combinedSongs.set(song.trackId, song)
-            }
-          })
-        })
-        .catch(err => console.error(`Error fetching songs for year ${year}:`, err))
-    )
+// --- Fetch Top Songs from Last.fm by decade tag ---
+async function fetchTopSongs(decade) {
+  // Map decade labels to Last.fm tags
+  const decadeTagMap = {
+    '70s': '1970s',
+    '80s': '1980s',
+    '90s': '1990s',
+    '00s': '2000s',
+    '2010s': '2010s'
   }
+  const tag = decadeTagMap[decade] || '1970s'
 
-  // Wait for all fetches
-  await Promise.all(fetchPromises)
+  const url = `https://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=${tag}&api_key=${LASTFM_API_KEY}&format=json&limit=20`
 
-  // Sort combined songs by releaseDate descending
-  const songsArray = Array.from(combinedSongs.values())
-  songsArray.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate))
+  try {
+    const res = await fetch(url)
+    const data = await res.json()
 
-  musicList.innerHTML = ''
-  songsArray.slice(0, 50).forEach(song => {
-    const div = document.createElement('div')
-    div.className = 'item'
-    div.innerHTML = `
-      <div class="item-title">${song.trackName}</div>
-      <div class="item-sub">By ${song.artistName} — Released: ${song.releaseDate.slice(0, 10)}</div>
-      <audio controls src="${song.previewUrl}"></audio>
-    `
-    div.style.cursor = 'pointer'
-    div.addEventListener('click', () => {
-      localStorage.setItem('selectedItemType', 'song')
-      localStorage.setItem('selectedItemId', song.trackId)
-      window.location.href = 'details.html'
+    if (!data.tracks || !data.tracks.track) {
+      musicList.textContent = 'No songs found for this decade.'
+      return
+    }
+
+    const tracks = data.tracks.track
+
+    musicList.innerHTML = ''
+    tracks.forEach(track => {
+      const artistName = track.artist.name
+      const trackName = track.name
+      const mbid = track.mbid || '' // MusicBrainz ID if available
+
+      const div = document.createElement('div')
+      div.className = 'item'
+      div.innerHTML = `
+        <div class="item-title">${trackName}</div>
+        <div class="item-sub">By ${artistName}</div>
+      `
+      div.style.cursor = 'pointer'
+      div.addEventListener('click', () => {
+        // Store mbid if available, else use artist+track combo
+        localStorage.setItem('selectedItemType', 'song')
+        localStorage.setItem('selectedItemId', mbid || `${artistName} - ${trackName}`)
+        window.location.href = 'details.html'
+      })
+      musicList.appendChild(div)
     })
-
-    musicList.appendChild(div)
-  })
-
-  if (songsArray.length === 0) {
-    musicList.textContent = 'No songs found for this decade.'
+  } catch (err) {
+    musicList.textContent = 'Failed to load music.'
+    console.error(err)
   }
 }
 
 // Initialize page
 if (decade) {
   fetchTopFilms(decade)
-  fetchSongsFromDecade(decade)
+  fetchTopSongs(decade)
 } else {
   musicList.textContent = 'No decade selected.'
   filmList.textContent = 'No decade selected.'
