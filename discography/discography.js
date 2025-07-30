@@ -1,26 +1,28 @@
 // Setup
-// DOM elements for music and movie cards
-
-// Store API keys
-
-
 // On page load
 document.addEventListener("DOMContentLoaded", () => {
-// Check if a decade was selected on the home page (saved in localStorage
-    const decade = localStorage.getItem("decadeInput");
-// Display decade in <h1>
+    // Check if a decade was selected on the home page (saved in localStorage
+    let decade = localStorage.getItem("decadeInput")?.trim();
+        // TEMP CODE
+    if (!decade) {
+        console.error("No decade found in localStorage. Redirecting to homepage...");
+        window.location.href = "index.html";
+        return;
+        }
+    // Display decade in <h1>
     const decadeHeading = document.getElementById("decade-name");
-// If decade exists, fetchMusicInfo() and fetchMovieInfo() with the selected decade
-    if (decade) {
-        decadeHeading.textContent = `${decade} Highlights`;
-    }
+    decadeHeading.textContent = `${decade} Highlights`;
 
+    // If decade exists, fetchMusicInfo() and fetchMovieInfo() with the selected decade
+    /* if (decade) {
+        decadeHeading.textContent = `${decade} Highlights`;
+    } */
     //fetch music and movie data
     fetchMusicInfo(decade);
     fetchMovieInfo(decade);
 
     // Apply theme colors for decade
-    applyDecadeTheme(decade);
+    applyTheme(decade);
 })
 
 // Fetch music from ReccoBeats
@@ -33,8 +35,13 @@ async function fetchMusicInfo(decade) {
         "2000s": { start: 2000, end: 2009 },
         "2010s": { start: 2010, end: 2019 },
     }
+    // Validate decade
+    if (!decadeMap[decade]) {
+        console.error(`No decadeMap entry found or decade: "${decade}"`);
+        return;
+    }
 
-    // Build API url for decades (or seed artist/track)
+        // Build API url for decades (or seed artist/track)
     const { start, end } = decadeMap[decade];
     const queryString = `?year_from=${start}&year_to=${end}&limit=10`;
     const url = `https://api.reccobeats.com/tracks${queryString}`;
@@ -62,15 +69,18 @@ function displayMusicCards(tracks) {
     // Clear #music-section card container
     const musicContainer = document.getElementById("music-cards");
     musicContainer.innerHTML = "";
+
     // Loop through tracks - create card elements dynamically
     tracks.forEach(track => {
         // Create card element (div.card)   
         const card = document.createElement("div");
         card.classList.add("card");
+
         // Add album art (img)
         const img = document.createElement("img");
         img.src = track.album?.image || "https://dummyimage.com/150x150/000/fff&text=Album+Cover";
         img.alt = `${track.name} album cover`;
+
         // Add track title and artist name
         const title = document.createElement("h3");
         title.textContent = track.name;
@@ -103,6 +113,12 @@ async function fetchMovieInfo(decade) {
         "2000s": { start: 2000, end: 2009 },
         "2010s": { start: 2010, end: 2019 },
     }
+
+    if (!decadeMap[decade]) {
+        console.error(`No decadeMap entry found for decade: "${decade}"`);
+        return;
+    }
+
     // Build API IRL for TMDb (filter by release date decade)
     const { start, end } = decadeMap[decade];
     const url = `https://api.themoviedb.org/3/discover/movie?api_key=b4e8f9af29bda2f259d3fa26214f2ace&primary_release_date.gte=${start}-01-01&primary_release_date.lte=${end}-12-31&sort_by=popularity.desc`;
@@ -110,7 +126,7 @@ async function fetchMovieInfo(decade) {
      // Parse response JSON
     // Limit results to 8-10 movies
     try {
-        const response = await fetchMovieInfo(url);
+        const response = await fetch(url);
         const data = await response.json();
         displayMovieCards(data.results.slice(0, 10));
     } catch (error) {
@@ -125,40 +141,50 @@ function displayMovieCards(movies) {
     // Clear #movie-section card container
     const movieContainer = document.getElementById("movie-cards");
     movieContainer.innerHTML = "";
+
     // Loop through movies
     movies.forEach(movie => {
         // Create card element (div.card)
         const card = document.createElement("div");
         card.classList.add("card");
+
         // Add poster
-        const img = document.createElement("h3");
+        const img = document.createElement("img");
         img.src = movie.poster_path
             ? `https://image.tmdb.org/t/p/w200${movie.poster_path}`
             : "https://dummyimage.com/150x225/000/fff&text=No+Poster";
         img.alt = `${movie.title} poster`;
+
         // Add movie title and release year
         const title = document.createElement("p");
         title.textContent = movie.title;
 
         const year = document.createElement("p");
         year.textContent = movie.release_date
-            ? movie.release_date.split("_") [0]
+            ? movie.release_date.split("-") [0]
             : "Unknown Year";
+
         // Append card to container
         card.appendChild(img);
         card.appendChild(title);
         card.appendChild(year);
+
         // Add click event to card -> save movie ID & navigate to details.html
         card.addEventListener("click", () => {
             navigateDetailsPage("movie", movie.id);
         })
+
         movieContainer.appendChild(card);
     })
 }
+
 // Navigate to details page
 function navigateDetailsPage(type, id) {
-// On card click: save selected ID (music or movie) in localStorage
-// Redirect to details.html
+    // On card click: save selected ID (music or movie) in localStorage
+    localStorage.setItem("selectedType", type);
+    // Redirect to details.html
+    localStorage.setItem("setlectedId", id);
+    window.location.href = "details.html";
 }
 
 // Handle Errors / Loading States
