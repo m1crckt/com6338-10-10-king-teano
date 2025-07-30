@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Catalog: Media Archive</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet" />
   <style>
     * {
       box-sizing: border-box;
@@ -13,9 +13,9 @@
     html, body {
       height: 100%;
       margin: 0;
-      font-family: 'Press Start 2P', cursive;
-      background: linear-gradient(135deg, #ffcc70, #f36f6f);
-      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #ffffff;
     }
 
     body {
@@ -29,7 +29,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center; /* vertical centering */
+      justify-content: center;
       padding: 2rem 1rem;
       text-align: center;
     }
@@ -37,38 +37,43 @@
     h1 {
       font-family: 'Poppins', sans-serif;
       font-size: 2.5rem;
+      font-weight: 700;
       margin: 0 0 0.5rem 0;
-      text-transform: uppercase; /* all caps */
-      text-shadow: 2px 2px #000;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
     }
 
     h2 {
       font-family: 'Poppins', sans-serif;
       font-size: 1.75rem;
+      font-weight: 500;
       margin: 1rem 0 2rem 0;
-      text-shadow: 1px 1px #000;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
     }
 
     .decade-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 1.5rem;
       width: 100%;
       max-width: 800px;
     }
 
     .decade-card {
-      background-color: rgba(0, 0, 0, 0.3);
-      border: 2px solid #fff;
+      background-color: #1e1e1e;
+      border: 1px solid #444;
       padding: 2rem 1rem;
       border-radius: 12px;
       font-size: 1.2rem;
       cursor: pointer;
-      transition: transform 0.2s, background-color 0.3s;
+      color: #fff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+      transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
     }
 
     .decade-card:hover {
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: #2a2a2a;
+      box-shadow: 0 0 12px rgba(0, 255, 200, 0.5);
       transform: scale(1.05);
     }
 
@@ -76,7 +81,7 @@
       padding: 1rem;
       font-size: 0.75rem;
       text-align: center;
-      opacity: 0.7;
+      opacity: 0.6;
       font-family: 'Poppins', sans-serif;
       user-select: none;
     }
@@ -99,6 +104,6 @@
     © 2025 CATALOG: MEDIA ARCHIVE, ALL RIGHTS RESERVED
   </footer>
 
-  <script src="script.js"></script>
+  <script src="index.js"></script>
 </body>
 </html>
