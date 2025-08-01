@@ -16,12 +16,11 @@ An interactive website where users can explore and play music, movies, or pop cu
 - Navigates to decade results page with decade in query string
 
 ### Created `details.html`
-- Created layout for **Song Details** that includes:
+- Created layout for **Album Details** that includes:
   - Artist name
   - Album name
-  - Release date
-  - Track number
   - Genre
+  - Track titles
 - Created layout for **Film Details** that includes:
   - Release date
   - Runtime
@@ -37,3 +36,14 @@ An interactive website where users can explore and play music, movies, or pop cu
 ### Created `details.js`
 - Pulls data from the **TMDB API** and **Last.FM API** to be applied to details for each selected song or film
 
+### Created `discography.html` and `styles.css`
+- Uses flex layout to display album and film items side by side
+- HTML file renamed to `decoy.html` to replace placeholder file
+
+### Created `discography.js`
+- Uses flex layout to display album and film items side by side
+- JS file renamed to `decoy.js` to replace placeholder file
+
+# Attribution
+    - Movie display and information courtesy of TMDb
+    - Album display and information courtesy of Last.FM

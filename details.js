@@ -1,3 +1,5 @@
+// Updated details.js to reflect new album selection and dynamic theme application
+
 const detailsContainer = document.getElementById('details-container')
 const detailHeader = document.getElementById('detail-header')
 
@@ -10,68 +12,76 @@ const itemId = localStorage.getItem('selectedItemId')
 
 if (!itemType || !itemId) {
   detailsContainer.innerHTML = '<p>No item selected.</p>'
-} else if (itemType === 'song') {
-  fetchSongDetails(itemId)
+} else if (itemType === 'album') {
+  fetchAlbumDetails(itemId)
 } else if (itemType === 'film') {
   fetchFilmDetails(itemId)
 } else {
   detailsContainer.innerHTML = '<p>Invalid item type.</p>'
 }
 
-// SONG DETAILS
-async function fetchSongDetails(id) {
-  detailHeader.textContent = 'Song Details'
+// Apply Theme from Decade (if exists)
+const themeMap = {
+  "1970s": { background: "#fce8b2", accent: "#e07b39", hover: "#a44a3f", highlight: "#a44a3f", musicSectionBg: "#e07b39", movieSectionBg: "#e07b39" },
+  "1980s": { background: "#1b1b3a", accent: "#ff6ec7", hover: "#00f6ed", highlight: "#d2f1ff", musicSectionBg: "#ff6ec7", movieSectionBg: "#ff6ec7" },
+  "1990s": { background: "#5d737e", accent: "#c0b283", hover: "#8b0000", highlight: "#c0b283", musicSectionBg: "#2b2b2b", movieSectionBg: "#2b2b2b" },
+  "2000s": { background: "#f0f8ff", accent: "#ff8daa", hover: "#70c1b3", highlight: "#f0f8ff", musicSectionBg: "#7d5ba6", movieSectionBg: "#7d5ba6" },
+  "2010s": { background: "#111", accent: "#444", hover: "#666", highlight: "#fff", musicSectionBg: "#1c1c1c", movieSectionBg: "#1c1c1c" }
+}
+
+const decade = localStorage.getItem("decadeInput")
+if (decade && themeMap[decade]) {
+  const theme = themeMap[decade]
+  const root = document.documentElement
+  root.style.setProperty('--background', theme.background)
+  root.style.setProperty('--accent', theme.accent)
+  root.style.setProperty('--hover', theme.hover)
+  root.style.setProperty('--highlight', theme.highlight)
+  root.style.setProperty('--music-section-bg', theme.musicSectionBg)
+  root.style.setProperty('--movie-section-bg', theme.movieSectionBg)
+}
+
+// ALBUM DETAILS
+async function fetchAlbumDetails(id) {
+  detailHeader.textContent = 'Album Details'
 
   try {
-    let url
-    let artist = ''
-    let track = ''
-    if (id.includes(' - ')) {
-      [artist, track] = id.split(' - ')
-      url = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=${LASTFM_API_KEY}&artist=${encodeURIComponent(artist)}&track=${encodeURIComponent(track)}&format=json`
-    } else {
-      url = `https://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=${LASTFM_API_KEY}&mbid=${id}&format=json`
-    }
-
+    let [artist, album] = id.split(' - ')
+    const url = `https://ws.audioscrobbler.com/2.0/?method=album.getInfo&api_key=${LASTFM_API_KEY}&artist=${encodeURIComponent(artist)}&album=${encodeURIComponent(album)}&format=json`
     const res = await fetch(url)
     const data = await res.json()
 
-    if (!data.track) {
-      detailsContainer.innerHTML = '<p>Song not found.</p>'
+    if (!data.album) {
+      detailsContainer.innerHTML = '<p>Album not found.</p>'
       return
     }
 
-    const trackInfo = data.track
+    const albumInfo = data.album
 
-    const album = trackInfo.album?.title || 'N/A'
-    const cover = trackInfo.album?.image?.find(img => img.size === 'extralarge')?.['#text'] || ''
-    const artistName = trackInfo.artist?.name || 'N/A'
-    const trackName = trackInfo.name || 'N/A'
-    const genres = trackInfo.toptags?.tag?.map(t => t.name) || ['N/A']
+    const cover = albumInfo.image?.find(img => img.size === 'extralarge')?.['#text'] || ''
+    const artistName = albumInfo.artist || 'N/A'
+    const albumName = albumInfo.name || 'N/A'
+    const genres = albumInfo.tags?.tag?.map(t => t.name) || ['N/A']
+    const tracks = albumInfo.tracks?.track || []
 
-    let releaseDate = 'N/A'
-    if (trackInfo.wiki?.published) {
-      const d = new Date(trackInfo.wiki.published)
-      releaseDate = d.toLocaleDateString()
-    }
-
-    const trackNumber = 'N/A'
+    const trackList = Array.isArray(tracks)
+      ? tracks.map(t => `<li>${t.name}</li>`).join('')
+      : `<li>${tracks.name}</li>`
 
     detailsContainer.innerHTML = `
-      <div class="song-detail-layout" style="display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap;">
-        ${cover ? `<img src="${cover}" alt="${trackName} Cover" style="width: 250px; border-radius: 8px;">` : ''}
-        <div>
-          <h3>${trackName}</h3>
+      <div class="album-detail-layout" style="display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap;">
+        ${cover ? `<img src="${cover}" alt="${albumName} Cover" style="width: 250px; border-radius: 8px;">` : ''}
+        <div style="flex: 1 1 300px; align-self: flex-start; margin-top: 0;">
+          <h3 style="margin-top: 0;">${albumName}</h3>
           <p><strong>Artist:</strong> ${artistName}</p>
-          <p><strong>Album:</strong> ${album}</p>
-          <p><strong>Release Date:</strong> ${releaseDate}</p>
-          <p><strong>Track Number:</strong> ${trackNumber}</p>
           <p><strong>Genre:</strong> ${genres.join(', ')}</p>
+          <h4>Tracks:</h4>
+          <ul>${trackList}</ul>
         </div>
       </div>
     `
   } catch (error) {
-    detailsContainer.innerHTML = '<p>Error loading song details.</p>'
+    detailsContainer.innerHTML = '<p>Error loading album details.</p>'
     console.error(error)
   }
 }
