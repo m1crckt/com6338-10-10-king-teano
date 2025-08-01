@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Details - Media Archive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #111;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #222;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    section {
+      background-color: #1c1c1c;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 2rem;
+    }
+
+    footer {
+      background-color: #222;
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    .song-detail-layout {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .song-detail-layout img {
+      max-width: 250px;
+      height: auto;
+      border-radius: 8px;
+    }
+
+
+    #details-container > div {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start; /* aligns text to the top of the image */
+      flex-wrap: wrap;
+    }
+
+    #details-container img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      text-decoration: none;
+      color: #ccc;
+      font-size: 0.95rem;
+    }
+
+    .back-link:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    audio {
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="home-link">Catalog: Media Archive</h1>
+  </header>
+
+  <main>
+    <section id="media-details">
+      <h2 id="detail-header">Details</h2>
+      <div id="details-container">Loading...</div>
+      <a href="decoy.html" class="back-link">← Back to Decade View</a>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 CATALOG: MEDIA ARCHIVE, ALL RIGHTS RESERVED
+  </footer>
+
+  <script src="details.js"></script>
+  <script>
+    document.getElementById('home-link').addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
