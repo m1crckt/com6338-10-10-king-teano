@@ -1,0 +1,155 @@
+:root {
+  --background: #111;
+  --text: #fff;
+  --accent: #444;
+  --hover: #666;
+  --highlight: #fff;
+  --music-section-bg: #1c1c1c;
+  --movie-section-bg: #1c1c1c;
+}
+/* ---------- Base Styles ---------- */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#music-section {
+  background-color: var(--music-section-bg);
+}
+
+#movie-section {
+  background-color: var(--movie-section-bg);
+}
+
+/* Header */
+header {
+  background-color: #222;
+  padding: 1rem;
+  text-align: center;
+}
+
+header nav {
+  margin-bottom: 0.5rem;
+}
+
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 1rem;
+  font-weight: bold;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+  color: var(--hover);
+}
+
+h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* ---------- Main Layout ---------- */
+main {
+  flex: 1;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two-column layout: music | movies */
+  gap: 2rem;
+}
+
+section {
+  background-color: #1c1c1c;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+h2 {
+  margin-top: 0;
+  font-size: 1.6rem;
+}
+
+/* ---------- Card Containers ---------- */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin: 20px auto;
+  padding: 0 10px;
+}
+
+/* Card Styling */
+.card {
+  background-color: #222;
+  color: #fff;
+  border-radius: 8px;
+  width: 150px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: 0.2s ease;
+  text-align: center;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  cursor: pointer;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 6px;
+}
+
+.card h3 {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1rem;
+}
+
+.card p {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+/* ---------- Footer ---------- */
+footer {
+  background-color: #222;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+#surprise-btn {
+  background-color: var(--accent);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+#surprise-btn:hover {
+  background-color: var(--hover);
+}
+
+/* ---------- Responsive Adjustments ---------- */
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr; /* Stack music and movies vertically on mobile */
+  }
+
+  .card {
+    width: 120px;
+  }
+}
