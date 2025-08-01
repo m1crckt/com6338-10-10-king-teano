@@ -1,3 +1,12 @@
+:root {
+  --background: #111;
+  --text: #fff;
+  --accent: #444;
+  --hover: #666;
+  --highlight: #fff;
+  --music-section-bg: #1c1c1c;
+  --movie-section-bg: #1c1c1c;
+}
 /* ---------- Base Styles ---------- */
 body {
   font-family: 'Poppins', sans-serif;
@@ -8,6 +17,14 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+#music-section {
+  background-color: var(--music-section-bg);
+}
+
+#movie-section {
+  background-color: var(--movie-section-bg);
 }
 
 /* Header */
@@ -112,7 +129,7 @@ footer {
 }
 
 #surprise-btn {
-  background-color: #444;
+  background-color: var(--accent);
   color: #fff;
   padding: 0.5rem 1rem;
   border: none;
@@ -122,7 +139,7 @@ footer {
 }
 
 #surprise-btn:hover {
-  background-color: #666;
+  background-color: var(--hover);
 }
 
 /* ---------- Responsive Adjustments ---------- */

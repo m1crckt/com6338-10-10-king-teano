@@ -254,6 +254,13 @@ function applyTheme(decade) {
     const theme = themeMap[decade];
     if (!theme) return;
 
+    const root = document.documentElement;
+    root.style.setProperty("--background", theme.background);
+    root.style.setProperty("--accent", theme.accent);
+    root.style.setProperty("--hover", theme.hover);
+    root.style.setProperty("--highlight", theme.highlight);
+    root.style.setProperty("--music-section-bg", theme.musicSectionBg);
+    root.style.setProperty("--movie-section-bg", theme.movieSectionBg);
     // Music and Movie sections
     document.body.style.backgroundColor = theme.background;
     document.body.style.color = theme.text;
