@@ -1,5 +1,3 @@
-// Updated details.js to reflect new album selection and dynamic theme application
-
 const detailsContainer = document.getElementById('details-container')
 const detailHeader = document.getElementById('detail-header')
 

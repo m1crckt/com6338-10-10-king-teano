@@ -7,7 +7,7 @@
   --music-section-bg: #1c1c1c;
   --movie-section-bg: #1c1c1c;
 }
-/* ---------- Base Styles ---------- */
+
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
@@ -27,7 +27,6 @@ body {
   background-color: var(--movie-section-bg);
 }
 
-/* Header */
 header {
   background-color: #222;
   padding: 1rem;
@@ -57,12 +56,11 @@ h1 {
   cursor: pointer;
 }
 
-/* ---------- Main Layout ---------- */
 main {
   flex: 1;
   padding: 2rem;
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Two-column layout: music | movies */
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
 
@@ -75,7 +73,6 @@ h2 {
   text-align: center;
 }
 
-/* ---------- Card Containers ---------- */
 .card-container {
   display: flex;
   flex-wrap: wrap;
@@ -85,7 +82,6 @@ h2 {
   padding: 0 10px;
 }
 
-/* Card Styling */
 .card {
   background-color: #222;
   color: #fff;
@@ -118,7 +114,6 @@ h2 {
   color: #bbb;
 }
 
-/* ---------- Footer ---------- */
 footer {
   background-color: #222;
   padding: 1rem;
@@ -141,10 +136,9 @@ footer {
   background-color: var(--hover);
 }
 
-/* ---------- Responsive Adjustments ---------- */
 @media (max-width: 768px) {
   main {
-    grid-template-columns: 1fr; /* Stack music and movies vertically on mobile */
+    grid-template-columns: 1fr;
   }
 
   .card {

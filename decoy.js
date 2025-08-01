@@ -1,5 +1,3 @@
-// Updated decoy.js with working Last.fm + TMDb integration and working click-to-details logic
-
 const themeMap = {
   "1970s": {
     background: "#fce8b2",
