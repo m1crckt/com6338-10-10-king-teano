@@ -8,10 +8,10 @@ decadeHeader.textContent = decade ? `Explore the ${decade}` : 'Unknown Decade'
 const musicList = document.getElementById('music-list')
 const filmList = document.getElementById('film-list')
 
-const TMDB_API_KEY = 'afe16acc7371ea20cf842174d3cd101e' // Your TMDb API key
-const LASTFM_API_KEY = 'b23e73024e246d9ed7226ddc54740e41' // Replace with your Last.fm API key
+const TMDB_API_KEY = 'afe16acc7371ea20cf842174d3cd101e'
+const LASTFM_API_KEY = 'b23e73024e246d9ed7226ddc54740e41'
 
-// --- Fetch Top Films from TMDB (exclude NC-17 and adult, include R and below) ---
+// --- Fetch Top Films from TMDB ---
 async function fetchTopFilms(decade) {
   const yearStart = decade.startsWith('00') ? 2000 : parseInt(decade)
   const yearEnd = yearStart + 9
@@ -80,7 +80,7 @@ async function fetchTopSongs(decade) {
     tracks.forEach(track => {
       const artistName = track.artist.name
       const trackName = track.name
-      const mbid = track.mbid || '' // MusicBrainz ID if available
+      const mbid = track.mbid || ''
 
       const div = document.createElement('div')
       div.className = 'item'
