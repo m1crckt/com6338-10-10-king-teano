@@ -13,7 +13,7 @@ const themeMap={
     "1980s": {
         background: "#1b1b3a",
         accent: "#ff6ec7",
-        hover: "#ff3f81",
+        hover: "#00f6ed",
         highlight: "#d2f1ff",
         musicSectionBg: "#ff6ec7",
         movieSectionBg: "#ff6ec7",
