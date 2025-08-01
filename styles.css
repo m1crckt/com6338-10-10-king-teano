@@ -66,15 +66,20 @@ main {
   gap: 2rem;
 }
 
-section {
+/* section {
   background-color: #1c1c1c;
   padding: 1rem;
   border-radius: 8px;
 }
+*/
 
 h2 {
-  margin-top: 0;
-  font-size: 1.6rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 500;
+  margin: 1rem 0 2rem 0;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+  text-align: center;
 }
 
 /* ---------- Card Containers ---------- */
